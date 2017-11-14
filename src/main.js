@@ -21,7 +21,7 @@ rem();
 import $ from 'jquery'
 
 //引入swiper
- import '../node_modules/swiper/dist/css/swiper.min.css';
+//  import '../node_modules/swiper/dist/css/swiper.min.css'; //新版的官方 打包会出现问题 只能用script标签映入的
 //  import Swiper from 'swiper' //哪里使用swiper 则复制到哪里去
 
 //mint-ui
