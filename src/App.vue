@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <v-header></v-header>
+        <v-header v-if="$route.name != 'login'"></v-header>
         <transition name="side">
             <side-menu v-show="getLeftNavState"></side-menu>
         </transition>
@@ -44,7 +44,6 @@
 //      console.info(123,this.getCategory)
 
 //      this.fetchHomeList()
-
     },
     components: {
       SideMenu,

@@ -22,7 +22,9 @@
     },
     methods: {
       showNav() {
-        this.$store.dispatch('changeLeftNavState', true)
+        this.$store.dispatch('changeLeftNavState', true) //2种写法的是一样的
+//        this.$store.commit('changeLeftNavState', true)
+
       }
     },
     mounted() {

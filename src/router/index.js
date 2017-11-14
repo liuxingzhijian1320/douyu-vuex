@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
 import setTitle from '../assets/scripts/settitle.js'; // 设置页面标题
-
+console.info('store',store)
 
 const home = resolve =>
   import ('../views/home/home');
@@ -11,6 +12,9 @@ const user = resolve =>
 
 const classify = resolve =>
   import ('../views/classify/classify');
+
+const login = resolve =>
+  import ('../views/login/login');
 
 
 Vue.use(Router)
@@ -30,17 +34,36 @@ const router = new Router({
     {
       path: '/',
       component: home,
-      name: 'home'
+      name: 'home',
+      meta:{
+        title:'首页'
+      }
     },
     {
       path: '/user',
       component: user,
-      name: 'user'
+      name: 'user',
+      meta:{
+        title:'个人中心',
+        login: true
+      }
     },
     {
       path: '/classify',
       component: classify,
-      name: 'classify'
+      name: 'classify',
+      meta:{
+        title:'分类',
+        login: true
+      }
+    },
+    {
+      path: '/login',
+      component: login,
+      name: 'login',
+      meta:{
+        title:'登陆'
+      }
     },
     {
       path: "*",
@@ -63,25 +86,25 @@ router.beforeEach((to, from, next) => {
 
   //全局拦截器的
   // console.info(to)
-  next()
-  // if (to.meta.login) {  // 判断该路由是否需要登录权限
-  //   if (JSON.parse(localStorage.getItem('login_user_info_cookie')) &&
-  //     JSON.parse(localStorage.getItem('login_user_info_cookie')).name
-  //     && JSON.parse(localStorage.getItem('login_user_info_cookie')).phone) {
-  //     next();
-  //   }
-  //   else {
-  //     MessageBox.alert('未登录，请先登录').then(() => {
-  //       next({
-  //         path: '/login',
-  //         redirect: to.fullPath
-  //       })
-  //     })
-  //   }
-  // }
-  // else {
-  //   next();
-  // }
+  // next()
+  if (to.meta.login) {  // 判断该路由是否需要登录权限
+    if (JSON.parse(localStorage.getItem('login_user_info_cookie')) &&
+      JSON.parse(localStorage.getItem('login_user_info_cookie')).name
+      && JSON.parse(localStorage.getItem('login_user_info_cookie')).phone) {
+      next();
+    }
+    else {
+      MessageBox.alert('未登录，请先登录').then(() => {
+        next({
+          path: '/login',
+          redirect: to.fullPath
+        })
+      })
+    }
+  }
+  else {
+    next();
+  }
 
 
   addHtmlBodyClass(from, to)
