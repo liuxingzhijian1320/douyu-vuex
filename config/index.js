@@ -23,27 +23,19 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 3246,
+    port: 9819,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      "/douyuapi":{
-        target:"http://open.douyucdn.cn",
-        changeOrigin:true,
-        pathRewrite:{
-          '^/douyuapi':'/api'
+     proxyTable: {
+        "/douyuapi":{
+          target:"http://open.douyucdn.cn",
+          changeOrigin:true,
+          pathRewrite:{
+             '^/douyuapi':'/api'
+          }
         }
-      },
-      '/category': {
-        target: 'https://m.douyu.com/category',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/category': ''
-        }
-      }
     },
-
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

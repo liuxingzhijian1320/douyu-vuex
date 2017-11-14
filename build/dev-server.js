@@ -12,9 +12,9 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 
-var IP = require('ip')
-var ip = IP.address()
+const ip = require('ip');
 
+const IP = ip.address();
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -33,7 +33,8 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
 })
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {
-  log: () => {}
+  log: false,
+  heartbeat: 2000
 })
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
@@ -67,20 +68,30 @@ var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsS
 app.use(staticPath, express.static('./static'))
 
 // var uri = 'http://localhost:' + port
-var uri = `http://${ip}:${port}`
 
-devMiddleware.waitUntilValid(function () {
-  console.log('> Listening at ' + uri + '\n')
+const uri = `http://${IP}:${port}`;
+
+
+var _resolve
+var readyPromise = new Promise(resolve => {
+  _resolve = resolve
 })
 
-module.exports = app.listen(port, function (err) {
-  if (err) {
-    console.log(err)
-    return
-  }
-
+console.log('> Starting dev server...')
+devMiddleware.waitUntilValid(() => {
+  console.log('> Listening at ' + uri + '\n')
   // when env is testing, don't need open it
   if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
     opn(uri)
   }
+  _resolve()
 })
+
+var server = app.listen(port)
+
+module.exports = {
+  ready: readyPromise,
+  close: () => {
+    server.close()
+  }
+}
